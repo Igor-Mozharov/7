@@ -73,9 +73,3 @@ def sort_folder(path):
                     '.')[0], normalize(file.name.split('.')[0]))
                 file.replace(dir_unk.joinpath(name))
     unpack_arc(folder_sort)
-    dir_unk = folder_sort / 'unknown'
-    print(
-        f'IT WAS SORTED IN {folder_sort}\nALL ADDED FOLDERS IS:\n {os.listdir(folder_sort)}\nAND ALL FILES IN THIS FOLDERS IS :')
-    for f in folder_sort.iterdir():
-        print(os.listdir(f))
-    print(show_all_known_extensions(folder_sort))
