@@ -13,15 +13,11 @@ extension_dict = {
     'unknown': []
 }
 
-main_directory = Path('C:\\SORT_FOLDER\\')
-if not os.path.isdir(main_directory):
-    os.makedirs(main_directory)
 
-
-def find_format(file):
+def find_format(file, directory):
     for suf in extension_dict:
         if file.name.split('.')[-1] in extension_dict[suf]:
-            dir_img = main_directory / suf
+            dir_img = directory / suf
             dir_img.mkdir(exist_ok=True)
             name = file.name.replace(file.name.split(
                 '.')[0], normalize(file.name.split('.')[0]))
@@ -30,26 +26,8 @@ def find_format(file):
     return False
 
 
-def sort_folder(path):
-    folder = Path(path)
-    for file in folder.iterdir():
-        if file.is_dir():
-            if file.name in ('audio', 'video', 'documents', 'images', 'archives', 'unknown'):
-                continue
-            sort_folder(file)
-            if not os.listdir(file):
-                os.rmdir(file)
-        else:
-            if find_format(file) == False:
-                dir_unk = main_directory / 'unknown'
-                dir_unk.mkdir(exist_ok=True)
-                name = file.name.replace(file.name.split(
-                    '.')[0], normalize(file.name.split('.')[0]))
-                file.replace(dir_unk.joinpath(name))
-
-
-def unpack_arc():
-    arch_dir = Path(main_directory / 'archives')
+def unpack_arc(directory):
+    arch_dir = Path(directory / 'archives')
     if os.path.exists(arch_dir):
         for arc in arch_dir.iterdir():
             try:
@@ -60,8 +38,8 @@ def unpack_arc():
 
 def show_unknown_extension(path):
     unknown_ext = set()
-    folder = Path(path)
-    for f in folder.iterdir():
+    path = Path(path)
+    for f in path.iterdir():
         unknown_ext.add(f.name.split('.')[1])
     return f' ALL UNKNOWN EXTENSION IS : {unknown_ext}'
 
@@ -72,10 +50,32 @@ def show_all_known_extensions(path):
     for root, dirs, files in os.walk(path):
         for f in files:
             all_known_ext.add(f.split('.')[1])
-    return f' ALL KNOWN EXTENSION IS: {all_known_ext}'
+    return f'\n ALL KNOWN EXTENSION IS: {all_known_ext}'
 
 
-# print(show_all_known_extensions(main_directory))
-# print(show_unknown_extension('C:\\SORT_FOLDER\\unknown'))
-# sort_folder('C:\\Projects\\HW6\\TEMP')
-# unpack_arc()
+def sort_folder(path):
+    folder = Path(path)
+    folder_sort = Path(os.path.join(os.getcwd(), 'SORTED'))
+    if not os.path.isdir(folder_sort):
+        os.mkdir(folder_sort)
+    for file in folder.iterdir():
+        if file.is_dir():
+            if file.name in ('audio', 'video', 'documents', 'images', 'archives', 'unknown'):
+                continue
+            sort_folder(file)
+            if not os.listdir(file):
+                os.rmdir(file)
+        else:
+            if find_format(file, folder_sort) == False:
+                dir_unk = folder_sort / 'unknown'
+                dir_unk.mkdir(exist_ok=True)
+                name = file.name.replace(file.name.split(
+                    '.')[0], normalize(file.name.split('.')[0]))
+                file.replace(dir_unk.joinpath(name))
+    unpack_arc(folder_sort)
+    dir_unk = folder_sort / 'unknown'
+    print(
+        f'IT WAS SORTED IN {folder_sort}\nALL ADDED FOLDERS IS:\n {os.listdir(folder_sort)}\nAND ALL FILES IN THIS FOLDERS IS :')
+    for f in folder_sort.iterdir():
+        print(os.listdir(f))
+    print(show_all_known_extensions(folder_sort))
