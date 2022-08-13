@@ -41,16 +41,16 @@ def show_unknown_extension(path):
     path = Path(path)
     for f in path.iterdir():
         unknown_ext.add(f.name.split('.')[1])
-    return f' ALL UNKNOWN EXTENSION IS : {unknown_ext}'
+    return f' ALL UNKNOWN EXTENSION FROM ALL IS : {unknown_ext}'
 
 
-def show_all_known_extensions(path):
+def show_all_extensions(path):
     all_known_ext = set()
     path = Path(path)
     for root, dirs, files in os.walk(path):
         for f in files:
             all_known_ext.add(f.split('.')[1])
-    return f'\n ALL KNOWN EXTENSION IS: {all_known_ext}'
+    return f'\n ALL SORTED EXTENSION IS: {all_known_ext}'
 
 
 def sort_folder(path):
