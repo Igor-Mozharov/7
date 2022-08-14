@@ -1,7 +1,7 @@
 import sys
 import os
 from pathlib import Path
-from move_and_copy import sort_folder, unpack_arc, show_unknown_extension, show_all_extensions
+from clean_folder.move_and_copy import sort_folder, show_unknown_extension, show_all_extensions
 
 
 def main():

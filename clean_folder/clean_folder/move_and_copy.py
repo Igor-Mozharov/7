@@ -2,7 +2,7 @@ import sys
 import os
 import shutil
 from pathlib import Path
-from funk_normalize import normalize
+from clean_folder.funk_normalize import normalize
 
 extension_dict = {
     'images': ['jpeg', 'jpg', 'svg', 'png'],
@@ -32,7 +32,7 @@ def unpack_arc(directory):
         for arc in arch_dir.iterdir():
             try:
                 shutil.unpack_archive(arc, arch_dir / arc.name.split('.')[0])
-            except:
+            except shutil.ReadError:
                 pass
 
 
@@ -66,7 +66,7 @@ def sort_folder(path):
             if not os.listdir(file):
                 os.rmdir(file)
         else:
-            if find_format(file, folder_sort) == False:
+            if not find_format(file, folder_sort):
                 dir_unk = folder_sort / 'unknown'
                 dir_unk.mkdir(exist_ok=True)
                 name = file.name.replace(file.name.split(
